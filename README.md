@@ -1,7 +1,8 @@
 # BicValidation
 
-ActiveModel Business Identifier Code (BIC) validator
+[![Build Status](https://travis-ci.org/opahk/bic_validation.png?branch=master)](https://travis-ci.org/opahk/bic_validation)
 
+ActiveModel Business Identifier Code (BIC) validator
 ## Installation
 
 Add this line to your application's Gemfile:
