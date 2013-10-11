@@ -25,7 +25,8 @@ module BicValidation
     def valid?
       of_valid_length? &&
         of_valid_format? &&
-        has_valid_country_code?
+        has_valid_country_code? &&
+        has_valid_branch_code?
     end
 
     def bank
