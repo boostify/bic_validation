@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["frank.eckert@boost-project.com"]
   gem.description   = <<-EOF
     BicValidation provides a simple ActiveModel::EachValidator for
-    formally validating Business Identifier Codes (BIC) aka SWIFT-code.
+    formally validating Business Identifier Codes (BIC) aka SWIFT-codes.
   EOF
   gem.summary       = %q{ActiveModel BIC validator}
   gem.homepage      = "https://github.com/opahk/bic_validation"
