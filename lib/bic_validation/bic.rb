@@ -23,8 +23,8 @@ module BicValidation
     end
 
     def valid?
-      of_valid_length? and
-        of_valid_format? and
+      of_valid_length? &&
+        of_valid_format? &&
         has_valid_country_code?
     end
 
@@ -46,17 +46,18 @@ module BicValidation
 
     private
 
-    def format
-      /([A-Z]{4})([A-Z]{2})([0-9A-Z]{2})([0-9A-Z]{3})?/
-    end
+      def format
+        /([A-Z]{4})([A-Z]{2})([0-9A-Z]{2})([0-9A-Z]{3})?/
+      end
 
-    def match
-      format.match(@code)
-    end
+      def match
+        format.match(@code)
+      end
 
-    def country_codes
-      # http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm
-      YAML.load(File.read(File.dirname(__FILE__) + '/country_codes.yml'))
-    end
+      def country_codes
+        # http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_\
+        # names_and_code_elements.htm
+        YAML.load(File.read(File.dirname(__FILE__) + '/country_codes.yml'))
+      end
   end
 end
