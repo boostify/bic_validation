@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/opahk/bic_validation.png?branch=master)](https://travis-ci.org/opahk/bic_validation)
 [![Coverage Status](https://coveralls.io/repos/opahk/bic_validation/badge.png?branch=master)](https://coveralls.io/r/opahk/bic_validation?branch=master)
+[![Code Climate](https://codeclimate.com/github/opahk/bic_validation.png)](https://codeclimate.com/github/opahk/bic_validation)
 
 ActiveModel Business Identifier Code (BIC) validator
 ## Installation
