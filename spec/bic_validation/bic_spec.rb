@@ -3,28 +3,72 @@ require 'spec_helper'
 module BicValidation
   describe Bic do
 
-    before { @bic = Bic.new 'MARKDEFF' }
+    context 'basic methods 11 digit' do
+      before { @bic = Bic.new 'MARKDEF1850' }
 
-    subject { @bic }
+      subject { @bic }
 
-    describe '#valid?' do
-      it { should be_valid }
+      describe '#valid?' do
+        it { should be_valid }
+      end
+
+      describe '#known?' do
+        it { should be_known }
+      end
+
+      describe '#bank' do
+        its(:bank) { should eq('MARK') }
+      end
+
+      describe '#country' do
+        its(:country) { should eq('DE') }
+      end
+
+      describe '#location' do
+        its(:location) { should eq('F1') }
+      end
+
+      describe '#branch' do
+        its(:branch) { should eq('850') }
+      end
     end
 
-    describe '#bank' do
-      its(:bank) { should eq('MARK') }
+    context 'basic methods 11 digit' do
+      before { @bic = Bic.new 'DEUTDEBB' }
+
+      subject { @bic }
+
+      describe '#valid?' do
+        it { should be_valid }
+      end
+
+      describe '#known?' do
+        it { should be_known }
+      end
+
+      describe '#bank' do
+        its(:bank) { should eq('DEUT') }
+      end
+
+      describe '#country' do
+        its(:country) { should eq('DE') }
+      end
+
+      describe '#location' do
+        its(:location) { should eq('BB') }
+      end
+
+      describe '#branch' do
+        its(:branch) { should be_nil }
+      end
     end
 
-    describe '#country' do
-      its(:country) { should eq('DE') }
-    end
-
-    describe '#location' do
-      its(:location) { should eq('FF') }
-    end
-
-    describe '#branch' do
-      its(:branch) { should be_nil }
+    describe 'validity checks for various BICS' do
+      it 'does not care about XXX' do
+        bic = Bic.new('DEUTDEBB')
+        expect(bic).to be_valid
+        expect(bic).to be_known
+      end
     end
   end
 end

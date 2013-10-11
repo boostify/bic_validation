@@ -1,3 +1,5 @@
+require 'active_support/core_ext/object/try'
+
 module BicValidation
   class Bic
 
@@ -20,6 +22,11 @@ module BicValidation
     def has_valid_branch_code?
       # WTF? http://de.wikipedia.org/wiki/ISO_9362
       country[0] =~ /[^01]/ && country[1] =~ /[^O]/
+    end
+
+    def known?
+      !KNOWN_BICS.include?(country.to_sym) ||
+        KNOWN_BICS[country.to_sym].include?(@code.try(:gsub, /XXX\$/, ''))
     end
 
     def valid?
@@ -54,6 +61,43 @@ module BicValidation
       def match
         format.match(@code)
       end
+
+      def self.known_bics
+        {
+          DE: de_bics,
+          AT: at_bics
+        }
+      end
+
+      def self.de_bics
+        bics = []
+        File.open(de_bic_file).each_line do |line|
+          bics << line[139..149].try(:gsub, /XXX$/, '')
+        end
+        bics.reject(&:blank?).uniq
+      end
+
+      def self.de_bic_file
+        File.dirname(__FILE__) + '/../../data/BLZ_20130909.txt'
+      end
+
+      def self.at_bics
+        bics = []
+        opts = { col_sep: ';',
+                 file_encoding: 'iso-8859-1',
+                 force_simple_split: true }
+        SmarterCSV.process(at_bic_file, opts).each do |bank|
+          bics << bank[:'swift-code'].try(:gsub, /"/, '').try(:gsub, /XXX$/, '')
+        end
+        bics.reject(&:blank?).uniq
+      end
+
+      def self.at_bic_file
+        File.dirname(__FILE__) +
+          '/../../data/kiverzeichnis_gesamt_de_1381499802577.csv'
+      end
+
+      KNOWN_BICS = known_bics
 
       def country_codes
         # http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_\
