@@ -26,7 +26,7 @@ module BicValidation
 
     def known?
       !KNOWN_BICS.include?(country.to_sym) ||
-        KNOWN_BICS[country.to_sym].include?(@code.try(:gsub, /XXX\$/, ''))
+        KNOWN_BICS[country.to_sym].include?(@code.try(:gsub, /XXX$/, ''))
     end
 
     def valid?
@@ -65,7 +65,8 @@ module BicValidation
       def self.known_bics
         {
           DE: de_bics,
-          AT: at_bics
+          AT: at_bics,
+          CH: ch_bics
         }
       end
 
@@ -95,6 +96,21 @@ module BicValidation
       def self.at_bic_file
         File.dirname(__FILE__) +
           '/../../data/kiverzeichnis_gesamt_de_1381499802577.csv'
+      end
+
+      def self.ch_bics
+        bics = []
+        File.read(ch_bic_file, encoding: 'iso-8859-1').lines.each do |line|
+          kennzeichen = line[7..10]
+          if kennzeichen == '0000'
+            bics << line[284..294].gsub(/XXX$/, '')
+          end
+        end
+        bics.reject(&:blank?).uniq
+      end
+
+      def self.ch_bic_file
+        File.dirname(__FILE__) + '/../../data/bcbankenstamm.txt'
       end
 
       KNOWN_BICS = known_bics

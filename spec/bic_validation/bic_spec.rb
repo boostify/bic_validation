@@ -63,11 +63,14 @@ module BicValidation
       end
     end
 
-    describe 'validity checks for various BICS' do
-      it 'does not care about XXX' do
-        bic = Bic.new('DEUTDEBB')
-        expect(bic).to be_valid
-        expect(bic).to be_known
+    ['DEUTDEBB', 'CRESCHZZ10S', 'UBSWCHZH86N', 'OEKOATWWXXX',
+     'OEKOATWW'].each do |swift|
+      describe 'validity checks' do
+        it "validates #{swift}" do
+          bic = Bic.new(swift)
+          expect(bic).to be_valid
+          expect(bic).to be_known
+        end
       end
     end
   end
