@@ -25,8 +25,8 @@ module BicValidation
     end
 
     def known?
-      !KNOWN_BICS.include?(country.to_sym) ||
-        KNOWN_BICS[country.to_sym].include?(@code.try(:gsub, /XXX$/, ''))
+      !known_bics.include?(country.to_sym) ||
+        known_bics[country.to_sym].include?(@code.try(:gsub, /XXX$/, ''))
     end
 
     def valid?
@@ -64,34 +64,18 @@ module BicValidation
 
       def self.known_bics
         {
-          DE: de_bics,
-          AT: at_bics,
-          CH: ch_bics
+          DE: bics(:de),
+          AT: bics(:at),
+          CH: bics(:ch)
         }
       end
 
-      def self.de_bics
-        BankingData::Bank.where(locale: :de).only(:bic)
+      def self.bics(country)
+        BankingData::Bank.where(locale: country).only(:bic)
           .map { |bic| bic.first.gsub(/XXX$/, '') }
           .reject(&:blank?)
           .uniq
       end
-
-      def self.at_bics
-        BankingData::Bank.where(locale: :at).only(:bic)
-          .map { |bic| bic.first.gsub(/XXX$/, '') }
-          .reject(&:blank?)
-          .uniq
-      end
-
-      def self.ch_bics
-        BankingData::Bank.where(locale: :ch).only(:bic)
-          .map { |bic| bic.first.gsub(/XXX$/, '') }
-          .reject(&:blank?)
-          .uniq
-      end
-
-      KNOWN_BICS = known_bics
 
       def country_codes
         # http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_\
