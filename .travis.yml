@@ -10,7 +10,6 @@ rvm:
   - rbx-head
 matrix:
   allow_failures:
-    - rvm:
-      - rbx-2.0.0
-      - rbx-head
+    - rvm: rbx-2.0.0
+    - rvm: rbx-head
 script: rspec
