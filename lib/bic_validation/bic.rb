@@ -71,46 +71,24 @@ module BicValidation
       end
 
       def self.de_bics
-        bics = []
-        File.open(de_bic_file).each_line do |line|
-          bics << line[139..149].try(:gsub, /XXX$/, '')
-        end
-        bics.reject(&:blank?).uniq
-      end
-
-      def self.de_bic_file
-        File.dirname(__FILE__) + '/../../data/BLZ_20130909.txt'
+        BankingData::Bank.where(locale: :de).only(:bic)
+          .map { |bic| bic.first.gsub(/XXX$/, '') }
+          .reject(&:blank?)
+          .uniq
       end
 
       def self.at_bics
-        bics = []
-        opts = { col_sep: ';',
-                 file_encoding: 'iso-8859-1',
-                 force_simple_split: true }
-        SmarterCSV.process(at_bic_file, opts).each do |bank|
-          bics << bank[:'swift-code'].try(:gsub, /"/, '').try(:gsub, /XXX$/, '')
-        end
-        bics.reject(&:blank?).uniq
-      end
-
-      def self.at_bic_file
-        File.dirname(__FILE__) +
-          '/../../data/kiverzeichnis_gesamt_de_1381499802577.csv'
+        BankingData::Bank.where(locale: :at).only(:bic)
+          .map { |bic| bic.first.gsub(/XXX$/, '') }
+          .reject(&:blank?)
+          .uniq
       end
 
       def self.ch_bics
-        bics = []
-        File.read(ch_bic_file, encoding: 'iso-8859-1').lines.each do |line|
-          kennzeichen = line[7..10]
-          if kennzeichen == '0000'
-            bics << line[284..294].gsub(/XXX$/, '')
-          end
-        end
-        bics.reject(&:blank?).uniq
-      end
-
-      def self.ch_bic_file
-        File.dirname(__FILE__) + '/../../data/bcbankenstamm.txt'
+        BankingData::Bank.where(locale: :ch).only(:bic)
+          .map { |bic| bic.first.gsub(/XXX$/, '') }
+          .reject(&:blank?)
+          .uniq
       end
 
       KNOWN_BICS = known_bics
