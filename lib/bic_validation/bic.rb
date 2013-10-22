@@ -62,7 +62,7 @@ module BicValidation
         format.match(@code)
       end
 
-      def self.known_bics
+      def known_bics
         {
           DE: bics(:de),
           AT: bics(:at),
@@ -70,7 +70,7 @@ module BicValidation
         }
       end
 
-      def self.bics(country)
+      def bics(country)
         BankingData::Bank.where(locale: country).only(:bic)
           .map { |bic| bic.first.gsub(/XXX$/, '') }
           .reject(&:blank?)
