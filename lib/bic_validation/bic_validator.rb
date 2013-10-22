@@ -1,8 +1,13 @@
 module BicValidation
   class BicValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      unless Bic.new(value).valid?
-        record.errors.add attribute, 'is not a valid BIC'
+      bic = Bic.new(value)
+      if bic.valid?
+        unless bic.known?
+          record.errors.add attribute, :unknown
+        end
+      else
+        record.errors.add attribute, :invalid
       end
     end
   end

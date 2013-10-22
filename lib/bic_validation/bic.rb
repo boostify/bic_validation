@@ -1,3 +1,5 @@
+require 'active_support/core_ext/object/try'
+
 module BicValidation
   class Bic
 
@@ -20,6 +22,11 @@ module BicValidation
     def has_valid_branch_code?
       # WTF? http://de.wikipedia.org/wiki/ISO_9362
       country[0] =~ /[^01]/ && country[1] =~ /[^O]/
+    end
+
+    def known?
+      !known_bics.include?(country.to_sym) ||
+        known_bics[country.to_sym].include?(@code.try(:gsub, /XXX$/, ''))
     end
 
     def valid?
@@ -53,6 +60,21 @@ module BicValidation
 
       def match
         format.match(@code)
+      end
+
+      def known_bics
+        {
+          DE: bics(:de),
+          AT: bics(:at),
+          CH: bics(:ch)
+        }
+      end
+
+      def bics(country)
+        BankingData::Bank.where(locale: country).only(:bic)
+          .map { |bic| bic.first.gsub(/XXX$/, '') }
+          .reject(&:blank?)
+          .uniq
       end
 
       def country_codes
