@@ -4,10 +4,10 @@ module BicValidation
       bic = Bic.new(value)
       if bic.valid?
         unless bic.known?
-          record.errors.add attribute, 'is a not a known BIC'
+          record.errors.add attribute, :unknown
         end
       else
-        record.errors.add attribute, 'is a not a well-formated BIC'
+        record.errors.add attribute, :invalid
       end
     end
   end

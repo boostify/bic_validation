@@ -33,7 +33,7 @@ module BicValidation
       end
     end
 
-    context 'basic methods 11 digit' do
+    context 'basic methods 8 digit' do
       before { @bic = Bic.new 'DEUTDEBB' }
 
       subject { @bic }
