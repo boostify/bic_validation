@@ -4,7 +4,7 @@ module BicValidation
   class Bic
 
     def initialize(code)
-      @code = code.strip.upcase
+      @code = code.to_s.strip.upcase
     end
 
     def of_valid_length?
@@ -34,6 +34,10 @@ module BicValidation
         of_valid_format? &&
         has_valid_country_code? &&
         has_valid_branch_code?
+    end
+
+    def invalid?
+      !valid?
     end
 
     def bank

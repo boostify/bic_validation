@@ -2,6 +2,22 @@ require 'spec_helper'
 
 module BicValidation
   describe Bic do
+    context 'with bogus data' do
+      it 'survives nil data' do
+        bic = Bic.new(nil)
+        expect(bic).to be_invalid
+      end
+
+      it 'survives integer data' do
+        bic = Bic.new(123)
+        expect(bic).to be_invalid
+      end
+
+      it 'survives float data' do
+        bic = Bic.new(1.23)
+        expect(bic).to be_invalid
+      end
+    end
 
     context 'basic methods 11 digit' do
       before { @bic = Bic.new 'MARKDEF1850' }
