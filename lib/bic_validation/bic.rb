@@ -2,6 +2,7 @@ require 'active_support/core_ext/object/try'
 
 module BicValidation
   class Bic
+    attr_accessor :code
 
     def initialize(code)
       @code = code.to_s.strip.upcase
