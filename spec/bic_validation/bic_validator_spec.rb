@@ -21,14 +21,12 @@ module BicValidation
     it 'is unknown' do
       model = Model.new 'DXUTDEFF'
       model.valid?
-      puts model.errors.inspect
       expect(model.errors.count).to eq(1)
     end
 
     it 'is invalid' do
       model = Model.new 'DXUTDE'
       model.valid?
-      puts model.errors.inspect
       expect(model.errors.count).to eq(1)
     end
   end

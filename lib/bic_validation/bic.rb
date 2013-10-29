@@ -2,9 +2,10 @@ require 'active_support/core_ext/object/try'
 
 module BicValidation
   class Bic
+    attr_accessor :code
 
     def initialize(code)
-      @code = code.strip.upcase
+      @code = code.to_s.strip.upcase
     end
 
     def of_valid_length?
@@ -25,8 +26,8 @@ module BicValidation
     end
 
     def known?
-      !KNOWN_BICS.include?(country.to_sym) ||
-        KNOWN_BICS[country.to_sym].include?(@code.try(:gsub, /XXX$/, ''))
+      !known_bics.include?(country.to_sym) ||
+        known_bics[country.to_sym].include?(@code.try(:gsub, /XXX$/, ''))
     end
 
     def valid?
@@ -34,6 +35,10 @@ module BicValidation
         of_valid_format? &&
         has_valid_country_code? &&
         has_valid_branch_code?
+    end
+
+    def invalid?
+      !valid?
     end
 
     def bank
@@ -62,58 +67,20 @@ module BicValidation
         format.match(@code)
       end
 
-      def self.known_bics
+      def known_bics
         {
-          DE: de_bics,
-          AT: at_bics,
-          CH: ch_bics
+          DE: bics(:de),
+          AT: bics(:at),
+          CH: bics(:ch)
         }
       end
 
-      def self.de_bics
-        bics = []
-        File.open(de_bic_file).each_line do |line|
-          bics << line[139..149].try(:gsub, /XXX$/, '')
-        end
-        bics.reject(&:blank?).uniq
+      def bics(country)
+        BankingData::Bank.where(locale: country).only(:bic)
+          .map { |bic| bic.first.gsub(/XXX$/, '') }
+          .reject(&:blank?)
+          .uniq
       end
-
-      def self.de_bic_file
-        File.dirname(__FILE__) + '/../../data/BLZ_20130909.txt'
-      end
-
-      def self.at_bics
-        bics = []
-        opts = { col_sep: ';',
-                 file_encoding: 'iso-8859-1',
-                 force_simple_split: true }
-        SmarterCSV.process(at_bic_file, opts).each do |bank|
-          bics << bank[:'swift-code'].try(:gsub, /"/, '').try(:gsub, /XXX$/, '')
-        end
-        bics.reject(&:blank?).uniq
-      end
-
-      def self.at_bic_file
-        File.dirname(__FILE__) +
-          '/../../data/kiverzeichnis_gesamt_de_1381499802577.csv'
-      end
-
-      def self.ch_bics
-        bics = []
-        File.read(ch_bic_file, encoding: 'iso-8859-1').lines.each do |line|
-          kennzeichen = line[7..10]
-          if kennzeichen == '0000'
-            bics << line[284..294].gsub(/XXX$/, '')
-          end
-        end
-        bics.reject(&:blank?).uniq
-      end
-
-      def self.ch_bic_file
-        File.dirname(__FILE__) + '/../../data/bcbankenstamm.txt'
-      end
-
-      KNOWN_BICS = known_bics
 
       def country_codes
         # http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_\

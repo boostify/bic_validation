@@ -6,6 +6,10 @@ rvm:
   - jruby-19mode
   - jruby-head
   - rbx-19mode
-  - rbx
+  - rbx-2.0.0
   - rbx-head
+matrix:
+  allow_failures:
+    - rvm: rbx-2.0.0
+    - rvm: rbx-head
 script: rspec

@@ -2,4 +2,3 @@ en:
   errors:
     messages:
       known_bic: is not known
-      format: is not well-formated
