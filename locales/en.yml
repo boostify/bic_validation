@@ -1,0 +1,4 @@
+en:
+  errors:
+    messages:
+      unknown_bic: not known
