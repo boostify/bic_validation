@@ -20,9 +20,9 @@ module BicValidation
       country_codes.include? country
     end
 
-    def has_valid_branch_code?
+    def has_valid_location_code?
       # WTF? http://de.wikipedia.org/wiki/ISO_9362
-      country[0] =~ /[^01]/ && country[1] =~ /[^O]/
+      location[0] =~ /[^01]/ && location[1] =~ /[^O]/
     end
 
     def known?
@@ -34,7 +34,7 @@ module BicValidation
       of_valid_length? &&
         of_valid_format? &&
         has_valid_country_code? &&
-        has_valid_branch_code?
+        has_valid_location_code?
     end
 
     def invalid?
