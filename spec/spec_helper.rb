@@ -1,6 +1,7 @@
 require 'simplecov'
 require 'coveralls'
 require 'pry'
+require 'rspec/its'
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,

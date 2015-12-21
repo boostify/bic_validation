@@ -80,7 +80,7 @@ module BicValidation
     end
 
     ['DEUTDEBB', 'CRESCHZZ10S', 'UBSWCHZH86N', 'OEKOATWWXXX',
-     'OEKOATWW'].each do |swift|
+     'OEKOATWW', 'BTRLRO22'].each do |swift|
       describe 'validity checks' do
         it "validates #{swift}" do
           bic = Bic.new(swift)
